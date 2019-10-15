@@ -29,6 +29,8 @@ lib LibLua
     i_ci : Void*
   end
 
+  #https://www.lua.org/manual/5.3/manual.htm
+
   fun l_newstate = luaL_newstate : State
   fun l_openlibs = luaL_openlibs(l : State)
   fun l_ref = luaL_ref(l : State, t : LibC::Int) : LibC::Int
