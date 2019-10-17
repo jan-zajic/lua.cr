@@ -22,6 +22,12 @@ module Lua
       LibLua.setglobal(@state, name)
     end
 
+    # gets a value of the global with the name
+    def get_global(name : String)
+      LibLua.getglobal(@state, name)
+      pop
+    end
+
     protected def check_lua_supported
       if (ver = version) < 503
         raise RuntimeError.new "Lua #{ver} not supported. Try Lua 5.3 or higher."
