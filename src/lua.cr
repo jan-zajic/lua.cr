@@ -16,4 +16,11 @@ module Lua
   ensure
     stack.try &.close
   end
+
+  def run!(chunk)
+    stack = Stack.new
+    stack.run!(chunk)
+  ensure
+    stack.try &.close
+  end
 end

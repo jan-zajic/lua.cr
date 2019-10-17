@@ -9,13 +9,13 @@ module Lua
 
       it "sets error handler" do
         expect_raises LuaError do
-          Stack.new.run "wrong!"
+          Stack.new.run! "wrong!"
         end
       end
 
       it "sets error handler if libs not loaded" do
         expect_raises LuaError do
-          Stack.new(libs: nil).run "wrong again!"
+          Stack.new(libs: nil).run! "wrong again!"
         end
       end
     end
