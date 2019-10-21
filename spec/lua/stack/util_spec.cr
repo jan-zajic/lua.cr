@@ -54,7 +54,29 @@ module Lua::StackMixin
         obj["w"].should eq "Crystal"
         obj = s.get_global("o").as(Table).to_h
         obj["w"].should eq "Lua"
+        c = CallableClass.new
+        # print c.print_methods
+        # print c.instance_vars_names
+      end
+
+      it "test lua callable" do
+        s = Stack.new
+        obj = CallableClass.new
+        val = obj._index("w")
+        s.set_global("o", obj)
+        res = s.run! %q{
+          c = o.w
+          o.w = "Lua"
+          return c
+        }
+        res.should eq "Crystal"
+        obj.w.should eq "Lua"
       end
     end
+  end
+
+  class CallableClass
+    include LuaCallable
+    property w : String = "Crystal"
   end
 end

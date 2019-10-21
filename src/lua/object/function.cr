@@ -21,7 +21,7 @@ module Lua
       end
     end
 
- # Make a call to the Lua function.
+    # Make a call to the Lua function.
     #
     # ```
     # s = Lua::Stack.new

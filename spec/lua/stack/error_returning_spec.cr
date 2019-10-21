@@ -1,7 +1,6 @@
 require "../../spec_helper"
 
 module Lua::StackMixin
-
   describe ErrorHandling do
     it "can catch lua runtime error" do
       expect_error RuntimeError, "attempt to call a nil value (global 'raise')" do

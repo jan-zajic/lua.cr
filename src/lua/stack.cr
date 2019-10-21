@@ -10,6 +10,7 @@ module Lua
     include StackMixin::ErrorHandling
     include StackMixin::CoroutineSupport
     include StackMixin::StandardLibraries
+    include StackMixin::ClassSupport
 
     getter state
     getter libs = Set(Symbol).new
@@ -87,9 +88,13 @@ module Lua
       when Hash, NamedTuple then pushtable(o.to_h)
         # TODO: Proc
       else
-        o.responds_to?(:to_lua) ? o.to_lua(@state) : raise ArgumentError.new(
-          "unable to pass Crystal object of type '#{typeof(o)}' to Lua"
-        )
+        if o.is_a?(LuaCallable)
+          pushobject(o.as(LuaCallable))
+        else
+          o.responds_to?(:to_lua) ? o.to_lua(@state) : raise ArgumentError.new(
+            "unable to pass Crystal object of type '#{typeof(o)}' to Lua"
+          )
+        end
       end
     end
 
