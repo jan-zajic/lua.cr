@@ -30,7 +30,7 @@ module LuaCallable
             {% elsif type <= Float64 %}
             return val.as(Float64)
             {% elsif type <= LuaCallable %}
-            return val.as(Lua::Callable).to_callable.as(T)
+            return val.as(Lua::Callable).to_crystal.as(T)
             {% else %}
             return val.as(T)
             {% end %}
@@ -38,7 +38,14 @@ module LuaCallable
     end
   end
 
-  macro included
+  macro included    
+    def self.__new(state : LibLua::State) : Int32
+      stack = Lua::Stack.new(state, :all)
+      instance = {{@type.name}}.new
+      stack << instance
+      return 1
+    end
+
     macro finished
         {% verbatim do %}
         {% for m in @type.methods %}

@@ -87,6 +87,14 @@ module Lua
       when Array, Tuple               then pushtable(o.to_a)
       when Hash, NamedTuple           then pushtable(o.to_h)
       when Proc(LibLua::State, Int32) then pushclosure(o.as(Proc))
+      when Class          then
+        if o < LuaCallable
+          pushmetatable(o)
+        else
+          raise ArgumentError.new(
+            "unable to pass Crystal Class of type '#{typeof(o)}' to Lua"
+          )
+        end
       else
         if o.is_a?(LuaCallable)
           pushobject(o.as(LuaCallable))

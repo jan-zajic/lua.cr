@@ -43,6 +43,20 @@ module Lua::StackMixin
         }
         res.should eq "Second after First"
       end
+
+      it "create new callable instance from Lua" do
+        s = Stack.new
+        s.set_global("m", CallableClass)
+        res = s.run! %q{
+          n = m.new()
+          n.w = "Lua"
+          return n
+        }        
+        res.should be_a(Lua::Callable)
+        c = res.as(Lua::Callable).to_crystal
+        c.should be_a(CallableClass)
+        c.w.should eq "Lua"
+      end
     end
   end
 
