@@ -86,7 +86,7 @@ module Lua
       when Symbol           then LibLua.pushstring(@state, o.to_s)
       when Array, Tuple     then pushtable(o.to_a)
       when Hash, NamedTuple then pushtable(o.to_h)
-        # TODO: Proc
+      when Proc(LibLua::State,Int32) then pushclosure(o.as(Proc))
       else
         if o.is_a?(LuaCallable)
           pushobject(o.as(LuaCallable))
@@ -118,8 +118,8 @@ module Lua
       when TYPE::TTABLE            then Table.new self, reference(pos)
       when TYPE::TFUNCTION         then Function.new self, reference(pos)
       when TYPE::TTHREAD           then Coroutine.new Stack.new(LibLua.tothread(@state, pos), libs.to_a)
-      when TYPE::TUSERDATA         then nil # TBD
-      when TYPE::TLIGHTUSERDATA    then nil # TBD
+      when TYPE::TUSERDATA         then Callable.new self, LibLua.touserdata(state, pos)
+      when TYPE::TLIGHTUSERDATA    then Reference.new self, LibLua.topointer(state, pos)
       else
         raise Exception.new "unable to map Lua type '#{type_at(pos)}'"
       end

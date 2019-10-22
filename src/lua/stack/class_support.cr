@@ -30,5 +30,18 @@ module Lua
       # Set metatable
       LibLua.setmetatable(@state, -2)
     end
+    
+    def pushclosure(proc : Proc)
+        if proc.closure?
+            ptr = proc.pointer
+            data = proc.closure_data       
+            c = ->LuaCallable.__call(LibLua::State)
+            LibLua.pushlightuserdata(@state, data)
+            LibLua.pushlightuserdata(@state, ptr)
+            LibLua.pushcclosure(@state, c, 2)
+        else
+            LibLua.pushcclosure(@state, proc, 0)
+        end
+    end
   end
 end

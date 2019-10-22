@@ -54,15 +54,11 @@ module Lua::StackMixin
         obj["w"].should eq "Crystal"
         obj = s.get_global("o").as(Table).to_h
         obj["w"].should eq "Lua"
-        c = CallableClass.new
-        # print c.print_methods
-        # print c.instance_vars_names
       end
 
-      it "test lua callable" do
+      it "test lua callable instance variables" do
         s = Stack.new
         obj = CallableClass.new
-        val = obj._index("w")
         s.set_global("o", obj)
         res = s.run! %q{
           c = o.w
@@ -72,11 +68,48 @@ module Lua::StackMixin
         res.should eq "Crystal"
         obj.w.should eq "Lua"
       end
+
+      it "test lua callable instance methods" do
+        s = Stack.new
+        obj = CallableClass.new
+        s.set_global("o", obj)
+        res = s.run! %q{
+          return o.simple_function()
+        }
+        res.should eq "Hello from CallableClass"
+        res = s.run! %q{
+          return o.arg_function("Dogs", 4)
+        }
+        res.should eq "4 Dogs"
+      end
+
+      it "test lua callable instance method with callable arg" do
+        s = Stack.new
+        obj1 = CallableClass.new
+        obj1.w = "First"
+        obj2 = CallableClass.new
+        obj2.w = "Second"
+        s.set_global("o1", obj1)
+        s.set_global("o2", obj2)
+        res = s.run! %q{
+          return o1.join_other(o2)
+        }
+        res.should eq "Second after First"
+      end
     end
   end
 
   class CallableClass
     include LuaCallable
     property w : String = "Crystal"
+    def simple_function : String
+      return "Hello from CallableClass"
+    end
+    def arg_function(kind, number : Int8) : String
+      return "#{number} #{kind}"
+    end
+    def join_other(other : CallableClass) : String
+      return "#{other.w} after #{self.w}"
+    end
   end
 end
