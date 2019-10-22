@@ -125,7 +125,6 @@ module LuaCallable
 
   def self.__gc(state : LibLua::State) : Int32
     data = LibLua.touserdata(state, -2).as(Pointer(Pointer(Void))).value
-    STDERR.puts "GC pointer: #{data}"
     return 0
   end
 

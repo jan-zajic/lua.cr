@@ -10,22 +10,25 @@ module Lua
       if LibLua.l_newmetatable(@state, type.name) == 1 # returns 1 if new
         # Set __index
         proc = ->LuaCallable.__index(LibLua::State)
-        self << "__index"                    # push method name on stack
+        self << INDEX_METAMETHOD             # push method name on stack
         LibLua.pushcclosure(@state, proc, 0) # pointer to function on stack
         LibLua.settable(@state, -3)
         # Set __gc
         proc = ->LuaCallable.__gc(LibLua::State)
-        self << "__gc"                       # push method name on stack
+        self << GC_METAMETHOD                # push method name on stack
         LibLua.pushcclosure(@state, proc, 0) # pointer to function on stack
         LibLua.settable(@state, -3)
         # set __newindex
         proc = ->LuaCallable.__newindex(LibLua::State)
-        self << "__newindex"                 # push method name on stack
+        self << NEW_INDEX_METAMETHOD         # push method name on stack
         LibLua.pushcclosure(@state, proc, 0) # pointer to function on stack
         LibLua.settable(@state, -3)
         proc = ->type.__new(LibLua::State)
-        self << "new"                        # push method name on stack
+        self << NEW_OBJECT_METAKEY           # push method name on stack
         LibLua.pushcclosure(@state, proc, 0) # pointer to function on stack
+        LibLua.settable(@state, -3)
+        self << CRYSTAL_BASE_TYPE_METAKEY
+        self << LuaCallable.class.name
         LibLua.settable(@state, -3)
       end
     end

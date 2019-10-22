@@ -30,4 +30,10 @@ module Lua
   REGISTRYINDEX = -1_001_000
 
   MULTRET = -1
+
+  CRYSTAL_BASE_TYPE_METAKEY = "__crystal_base_type"
+  NEW_OBJECT_METAKEY        = "new"
+  NEW_INDEX_METAMETHOD      = "__newindex"
+  INDEX_METAMETHOD          = "__index"
+  GC_METAMETHOD             = "__gc"
 end
