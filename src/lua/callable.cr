@@ -1,7 +1,7 @@
 module LuaCallable
   struct LuaConvert(T)
     def self.convert(val : Lua::Type) : T
-        {% for i in (1..1) %}
+      {% for i in (1..1) %}
             {% type = @type.type_vars[0].resolve %}
             {% if type <= Nil %}
             return nil
@@ -38,7 +38,7 @@ module LuaCallable
     end
   end
 
-  macro included    
+  macro included
     macro finished
         {% verbatim do %}
         {% for m in @type.methods %}
@@ -50,9 +50,9 @@ module LuaCallable
             {% end %}
             {% for a, index in reverseArgs %}
                 {% if a.restriction.is_a?(Nop) %}  
-                    {{a.name}} = stack[-{{index+1}}]                
+                    {{a.name}} = stack[-{{index + 1}}]                
                 {% else %}
-                    {{a.name}} = LuaConvert({{a.restriction}}).convert(stack[-{{index+1}}])
+                    {{a.name}} = LuaConvert({{a.restriction}}).convert(stack[-{{index + 1}}])
                 {% end %}  
             {% end %}
             {% if m.args.empty? %}           
@@ -75,7 +75,7 @@ module LuaCallable
     end
   end
 
-  def _index(key : String)        
+  def _index(key : String)
     {% for m in @type.instance_vars %}       
         if key == "{{m.name}}"
             return self.{{m.name}}
@@ -93,7 +93,7 @@ module LuaCallable
   end
 
   def self.__index(state : LibLua::State) : Int32 # __index(t,k)
-    stack = Lua::Stack.new(state, :all)    
+    stack = Lua::Stack.new(state, :all)
     key = String.new LibLua.tolstring(state, -1, nil)
     data = LibLua.touserdata(state, -2).as(LuaCallable*)
     pointer = data.value
@@ -119,9 +119,9 @@ module LuaCallable
   end
 
   def self.__call(state : LibLua::State) : Int32
-    data = LibLua.topointer(state, Lua::REGISTRYINDEX-1); #lua_upvalueindex(1)
-    ptr = LibLua.topointer(state, Lua::REGISTRYINDEX-2); #lua_upvalueindex(2)
-    proc = Proc(LibLua::State,Int32).new(ptr, data)
+    data = LibLua.topointer(state, Lua::REGISTRYINDEX - 1) # lua_upvalueindex(1)
+    ptr = LibLua.topointer(state, Lua::REGISTRYINDEX - 2)  # lua_upvalueindex(2)
+    proc = Proc(LibLua::State, Int32).new(ptr, data)
     return proc.call(state)
   end
 end

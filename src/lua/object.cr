@@ -41,6 +41,7 @@ module Lua
 
   class Reference
     getter ref
+
     def initialize(@stack : Stack, @ref : Void*)
     end
 
