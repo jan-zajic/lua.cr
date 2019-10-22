@@ -48,7 +48,6 @@ module Lua::StackMixin
         s = Stack.new
         s.set_global("m", CallableClass)
         res = s.run! %q{
-          print(package.loaded)
           n = m.new()
           n.w = "Lua"
           return n

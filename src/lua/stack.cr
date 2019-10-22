@@ -96,13 +96,9 @@ module Lua
           )
         end
       else
-        if o.is_a?(LuaCallable)
-          pushobject(o.as(LuaCallable))
-        else
-          o.responds_to?(:to_lua) ? o.to_lua(@state) : raise ArgumentError.new(
-            "unable to pass Crystal object of type '#{typeof(o)}' to Lua"
-          )
-        end
+        o.responds_to?(:to_lua) ? o.to_lua(self) : raise ArgumentError.new(
+          "unable to pass Crystal object of type '#{typeof(o)}' to Lua"
+        )
       end
     end
 

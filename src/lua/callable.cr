@@ -1,4 +1,8 @@
 module LuaCallable
+  def to_lua(stack : Lua::Stack)
+    stack.pushobject(self)
+  end
+
   struct LuaConvert(T)
     def self.convert(val : Lua::Type) : T
       {% for i in (1..1) %}
