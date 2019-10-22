@@ -28,7 +28,7 @@ module Lua
         LibLua.pushcclosure(@state, proc, 0) # pointer to function on stack
         LibLua.settable(@state, -3)
         self << CRYSTAL_BASE_TYPE_METAKEY
-        self << LuaCallable.class.name
+        self << LuaCallable.name
         LibLua.settable(@state, -3)
       end
     end

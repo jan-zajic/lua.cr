@@ -53,7 +53,9 @@ module Lua::StackMixin
           return n
         }
         res.should be_a(Lua::Callable)
-        c = res.as(Lua::Callable).to_crystal
+        cc = res.as(Lua::Callable)
+        cc.crystal_type_name.should eq CallableClass.name
+        c = cc.to_crystal
         c.should be_a(CallableClass)
         c.w.should eq "Lua"
       end

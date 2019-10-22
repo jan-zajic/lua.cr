@@ -33,6 +33,7 @@ module Lua
 
   CRYSTAL_BASE_TYPE_METAKEY = "__crystal_base_type"
   NEW_OBJECT_METAKEY        = "new"
+  TYPE_NAME_METAKEY         = "__name"
   NEW_INDEX_METAMETHOD      = "__newindex"
   INDEX_METAMETHOD          = "__index"
   GC_METAMETHOD             = "__gc"

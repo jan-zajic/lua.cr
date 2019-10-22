@@ -122,8 +122,14 @@ module Lua
       when TYPE::TTABLE            then Table.new self, reference(pos)
       when TYPE::TFUNCTION         then Function.new self, reference(pos)
       when TYPE::TTHREAD           then Coroutine.new Stack.new(LibLua.tothread(@state, pos), libs.to_a)
-      when TYPE::TUSERDATA         then Callable.new self, LibLua.touserdata(state, pos)
-      when TYPE::TLIGHTUSERDATA    then Reference.new self, LibLua.topointer(state, pos)
+      when TYPE::TUSERDATA
+        type_info = crystal_type_info_at(pos)
+        if !type_info[1].nil? && type_info[0] == LuaCallable.name
+          Callable.new self, LibLua.touserdata(state, pos), type_info[1]
+        else
+          Reference.new self, LibLua.topointer(state, pos)
+        end
+      when TYPE::TLIGHTUSERDATA then Reference.new self, LibLua.topointer(state, pos)
       else
         raise Exception.new "unable to map Lua type '#{type_at(pos)}'"
       end
