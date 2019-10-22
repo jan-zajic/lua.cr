@@ -48,10 +48,11 @@ module Lua::StackMixin
         s = Stack.new
         s.set_global("m", CallableClass)
         res = s.run! %q{
+          print(package.loaded)
           n = m.new()
           n.w = "Lua"
           return n
-        }        
+        }
         res.should be_a(Lua::Callable)
         c = res.as(Lua::Callable).to_crystal
         c.should be_a(CallableClass)

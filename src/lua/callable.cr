@@ -38,7 +38,7 @@ module LuaCallable
     end
   end
 
-  macro included    
+  macro included
     def self.__new(state : LibLua::State) : Int32
       stack = Lua::Stack.new(state, :all)
       instance = {{@type.name}}.new

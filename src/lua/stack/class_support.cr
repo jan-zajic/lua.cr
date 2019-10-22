@@ -24,7 +24,7 @@ module Lua
         LibLua.pushcclosure(@state, proc, 0) # pointer to function on stack
         LibLua.settable(@state, -3)
         proc = ->type.__new(LibLua::State)
-        self << "new"                 # push method name on stack
+        self << "new"                        # push method name on stack
         LibLua.pushcclosure(@state, proc, 0) # pointer to function on stack
         LibLua.settable(@state, -3)
       end
